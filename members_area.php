@@ -1,9 +1,6 @@
 <?php
+include_once('config.php');
     session_start();
-    $DB_USER = "root";
-    $DB_PASSWORD = "root";
-    $DB_HOST = "localhost";
-    $DB_NAME = "clef-test";
 
     // don't let those filthy nonmembers in here
     if(!isset($_SESSION["user_id"])) {

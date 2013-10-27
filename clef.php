@@ -1,13 +1,6 @@
 <?php
 
-$DB_USER = "root";
-$DB_PASSWORD = "root";
-$DB_HOST = "localhost";
-$DB_NAME = "clef-test";
-
-$clef_base_url='https://clef.io/api/v1/';
-$app_id='4f318ac177a9391c2e0d221203725ffd';
-$app_secret='2125d80f4583c52c46f8084bcc030c9b';
+include_once('config.php');
 
 if (!session_id())
     session_start();
@@ -75,11 +68,11 @@ if (isset($_GET["code"]) && $_GET["code"] != "") {
                         $_SESSION['logged_in_at'] = time();  // timestamp in unix time
 
                         $clef_id = $result['id'];
-                        $name = mysqli_escape_string($result['first_name']);
 
                         // replace "root" and "root" with your own database's username and password
                         $mysql = mysqli_connect($DB_HOST, $DB_USER, $DB_PASSWORD);
 
+                        $name = mysqli_escape_string($mysql,$result['first_name']);
                         $query = "SELECT * FROM {$DB_NAME}.users WHERE clef_id='{$clef_id}'";
 
                         if($response = mysqli_query($mysql, $query)) {
@@ -87,7 +80,7 @@ if (isset($_GET["code"]) && $_GET["code"] != "") {
 
                             // if the user is new, register them 
                             if(sizeof($rows) == 0) {
-                                $query = "INSERT INTO clef-test.users (clef_id, name) VALUES ('{$clef_id}', '{$name}');";
+                                $query = "INSERT INTO {$DB_NAME}.users (clef_id, name) VALUES ('{$clef_id}', '{$name}');";
 
                                 $response = mysqli_query($mysql, $query);
                             }
